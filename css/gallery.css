@@ -1,0 +1,39 @@
+body{
+    width: 1200px;
+    margin: 0 auto;
+}
+.wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 0 0 0;
+    position: relative;
+}
+.img{
+    margin: 0 0 40px 0;
+}
+#right{
+position: absolute;
+right: 250px;
+background: none;
+border: none;
+top:180px;
+}
+#left{
+    position: absolute;
+    left:250px;
+    background: none;
+    border: none;
+    top:180px;
+}
+#right:focus, #left:focus{
+    border: none;
+    outline: none;
+}
+#right:hover, #left:active, #right:active, #left:hover{
+    fill: blue;
+
+}
+.img_roulette:hover{
+ outline:2px solid grey;
+}
