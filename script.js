@@ -63,9 +63,14 @@ let editor = {
         }
     },
     _drawLine () {
-        ctx.moveTo(editor.x, editor.y)
+        ctx.lineWidth = editor.brushSize
+        let temp_x = editor.x
+        let temp_y = editor.y
         canvas.onmouseup = () => {
+            ctx.beginPath()
+            ctx.moveTo(temp_x, temp_y)
             ctx.lineTo(editor.x, editor.y)
+            ctx.closePath()           
             ctx.stroke()
             canvas.onmouseup = null
         }
@@ -76,6 +81,7 @@ let editor = {
         canvas.onmouseup = () => {
             ctx.beginPath()
             ctx.arc(temp_x, temp_y, Math.sqrt(Math.pow(editor.x - temp_x,2) + Math.pow(editor.y - temp_y, 2)), 0, 2 * Math.PI)
+            ctx.closePath()
             ctx.stroke()
             ctx.fill()
             canvas.onmouseup = null
