@@ -28,7 +28,10 @@ let editor = {
         let val = evt.target.value
         if (id === 'select-color' || id === 'select-size') {
             id === 'select-color' ? editor.currentColor = val : editor.brushSize = val
-            if (id === 'select-color') ctx.fillStyle = editor.currentColor
+            if (id === 'select-color') {
+                ctx.fillStyle = editor.currentColor
+                ctx.strokeStyle = editor.currentColor
+            }
         }
     },
     clickHandler (evt) {
