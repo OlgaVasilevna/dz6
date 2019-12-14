@@ -1,0 +1,60 @@
+body{
+    width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
+.canv{
+    width: 100%;
+    
+}
+
+
+#canv {
+    width: 1000px; 
+    height: 800px; 
+    border:10px inset grey;
+    box-sizing: border-box;
+    
+}
+.coordinates{
+    width: 1000px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+#x, #y{
+    padding: 0 15px;
+    
+    
+}
+button{
+    margin: 0 0 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    
+}
+.brush{
+    width: 70px;
+    min-height: 790px;
+    padding: 10px 10px 0 10px;
+    border:1px solid grey;
+    background-color: lightgray;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 1050px;
+    top:50px;
+    align-items: center;
+
+}
+#select-color{
+    margin: 0 0 10px 0;
+    cursor: pointer;
+}
+#select-size{
+    margin: 0 0 10px 0;
+    width: 60px;
+    cursor: pointer;
+}
