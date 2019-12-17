@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/gallery.css">
+</head>
+<body>
+    <div class="wrapper">
+        <div id="GALLERY">
+            <div class="img"> 
+                <img id="MAIN-PIC" width="400" height="300">
+            </div>
+        </div>
+
+        <div id="roulette">
+        </div>
+        <div id="control">
+            <button id="left" name="control" data-step="-1">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  x="0px" y="0px" viewBox="0 0 489 489" 
+                width="50" height="50">
+                    <path d="M429.4,255.033c-35.4-43.1-102.1-94.4-219.7-98.8v-79.8c0-4.7-2.7-9.1-7-11.1s-9.4-1.4-13,1.6L4.5,219.633 
+                    c-2.8,2.3-4.5,5.8-4.5,9.4c0,3.7,1.6,7.1,4.4,9.4l185.2,153.3c3.7,3,8.7,3.7,13,1.6c4.3-2,7-6.3,7-11.1v-79.5  
+                    c76.8,0.3,194.2,6,256.5,115.9c2.2,3.9,6.3,6.2,10.7,6.2c1,0,2.1-0.1,3.1-0.4c5.4-1.4,9.1-6.3,9.1-11.8 
+                    C489.1,371.533,473.4,308.633,429.4,255.033z M197.4,278.233L197.4,278.233c-3.3,0-6.4,1.3-8.7,3.6s-3.6,5.4-3.6,8.7v65.7  
+                    l-153.5-127.1l153.6-126.7v65.7c0,6.7,5.4,12.2,12.1,12.3c176,1.7,241.6,109,260.7,184.4   C382.2,278.333,268.7,278.233,197.4,278.233z"/>
+            
+                </svg>
+            </button>    
+            <button id="right" name="control" data-step="1">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 489 489" 
+                width="50" height="50">
+                    <path d="M59.7,255.005c-44,53.5-59.7,116.5-59.7,157.6c0,5.6,3.7,10.4,9.1,11.8c1,0.3,2.1,0.4,3.1,0.4c4.3,0,8.4-2.3,10.7-6.2 
+                    c62.3-109.8,179.8-115.6,256.5-115.9v79.5c0,4.7,2.7,9.1,7,11.1s9.4,1.4,13-1.6l185.2-153.2c2.8-2.3,4.4-5.8,4.4-9.4  
+                    c0-3.7-1.6-7.1-4.5-9.4l-185-152.7c-3.7-3-8.7-3.7-13-1.6c-4.3,2-7,6.3-7,11.1v79.8C161.7,160.605,95.1,211.905,59.7,255.005z  
+                    M291.8,180.405c6.7-0.1,12.1-5.5,12.1-12.3v-65.7l153.6,126.7l-153.6,127.1v-65.7c0-3.2-1.3-6.4-3.6-8.7c-2.3-2.3-5.4-3.6-8.7-3.6 
+                    c-71.3,0-184.7,0-260.6,86.6C50.1,289.405,115.8,182.105,291.8,180.405z"/>
+            
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let IMGS = [
+            'https://cs8.pikabu.ru/post_img/big/2017/12/25/5/1514188160141511997.jpg', 
+            'https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/HMUB2?wid=1144&hei=1144&fmt=jpeg&qlt=80&op_usm=0.5,0.5&.v=1563827752399',
+            'https://zeon18.ru/files/item/Xiaomi-Mi-Notebook-Air-4G-Officially-Announced-Weboo-co-2%20(1)_1.jpg',
+            'https://files.sandberg.it/products/images/lg/640-05_lg.jpg',
+            'https://images-na.ssl-images-amazon.com/images/I/81PLqxtrJ3L._SX466_.jpg'
+            ]
+        let gallery={
+            IMGS:[],
+            MAIN_PIC : document.getElementById ('MAIN-PIC'),
+            ROUL : document.getElementById ('roulette'),
+            CONTR : document.getElementById ('control'),
+
+            _init(pic){
+                pic.forEach(element => {
+                    this.IMGS.push(element)
+                    
+                });
+                
+                this.MAIN_PIC.src = this.IMGS [0]
+                this.IMGS.forEach(el => {
+                    this.ROUL.insertAdjacentHTML ('beforeend', this.createItem(el).render())
+                    })
+                this.ROUL.addEventListener ('click', this.changeMain),
+                this.ROUL.addEventListener ('mouseover', this.changeMain),
+                this.CONTR.addEventListener ('click', (evt) => {
+                let e = evt.target 
+                if (e.nodeName=="svg"){
+                    e=e.parentNode
+                }
+                if (e.nodeName=="path"){
+                    e=e.parentNode.parentNode
+                }
+                //<button>
+
+                if (e.name === 'control') {
+                    let step = +e.dataset.step
+                    let actual = this.IMGS.indexOf (this.MAIN_PIC.src)
+
+                    if ((actual === this.IMGS.length - 1) && (step === 1)) actual = -1 
+                    if ((actual === 0) && (step === -1)) actual = this.IMGS.length 
+
+                    this.MAIN_PIC.src = this.IMGS [actual + step]
+                }
+                })
+
+            },
+
+            createItem (item) {
+                return {
+                    width: 150,
+                    height: 100,
+                    render () {
+                        return `
+                            <img class="img_roulette"
+                            src="${item}" 
+                            width="${this.width}" 
+                            height="${this.height}">
+                        `
+                    }
+                }
+            },
+
+            changeMain (evt) {
+                if (evt.target.tagName === 'IMG') {
+                    let buffer = gallery.MAIN_PIC.src
+                    gallery.MAIN_PIC.src = evt.target.src
+                    gallery.ROUL.addEventListener("mouseout",()=>{
+                        gallery.MAIN_PIC.src=buffer
+                    })
+                }
+            },           
+        }
+    gallery._init(IMGS) 
+    </script>
+</body>
+</html>
