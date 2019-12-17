@@ -17,13 +17,24 @@ let IMGS = [
 let catalog = {
     items: [],
     container: '.products',
-    construct () {
+    cart: null,
+    construct (cart) {
+        this.cart = cart
         this._init () //_ - это обозначение инкапсулированного метода
     },
     _init () {
         this._handleData ()
         this.render ()
+        this._handleEvents ()
     },
+    _handleEvents () {
+        document.querySelector (this.container).addEventListener ('click', (evt) => {
+            if (evt.target.name === 'buy-btn') {
+                this.cart.addProduct (evt.target)
+            }
+        })
+    },
+  
     _handleData () {
         for (let i = 0; i < IDS.length; i++) {
             this.items.push (this._createNewProduct (i))
@@ -45,65 +56,31 @@ let catalog = {
                     <img class="img_catalog" width="300" height="200" src="${item.product_img}">
                     <p class="name_product">${item.product_name}</p>
                     <span class="price_product">${item.price}$</span>
-                    <button  class="button_product" name="${item.product_id}")">Buy</button>
+                     <button 
+                        class="button_product" 
+                        name="buy-btn"
+                        data-src="${item.product_img}"
+                        data-name="${item.product_name}"
+                        data-price="${item.price}"
+                        data-id="${item.product_id}"
+                        >Купить</button>
                 </div>
             `
         });
         document.querySelector(this.container).innerHTML = str;
         
         document.querySelector(".cart_total").innerHTML = `${cart.total}`;
-        let str1=``;
-        cart.items.forEach ((product,index) => {
-                str1+=`
-            <div class="product_cart">
-                    <img class="img_cart" width="100" height="100" src="${product.product_img}">
-                    <div class="text_block">
-                        <p class="text_cart">${product.product_name}</p>
-                        <p class="text_cart">${product.price}$</p>
-                        <p class="text_cart">quantity ${product.quantity}</p>
-                        <button class="btn_minus" name="minus${product.product_id}">-</button>
-                        <button class="btn_add" name="add${product.product_id}">+</button>
-                        <button class="btn_delete" name="delete${product.product_id}">X</button>
-                    </div>
-            </div>`       
-        });
-        str1+=`<div>
-        <p class="total">Quantity : ${cart.total}</p>
-        <p class="total">Sum :  ${cart.sum}$</p>
-      </div>`;
-        document.querySelector(`.div_cart`).innerHTML = str1;
-        this.items.forEach (item => {
-            document.querySelector(`button[name="${item.product_id}"]`).addEventListener("click",cart.addProduct)
-        });
-        cart.items.forEach(item=>{
-            document.querySelector(`button[name="minus${item.product_id}"]`).addEventListener("click",cart.deleteProduct)
-        });
-        cart.items.forEach(item=>{
-            document.querySelector(`button[name="add${item.product_id}"]`).addEventListener("click",()=>{
-                item.quantity++
-                cart._checkTotal ();
-                cart.calculateSum ();
-                catalog.render();
-            });
-        });
-        cart.items.forEach((item,index)=>{
-            document.querySelector(`button[name="delete${item.product_id}"]`).addEventListener("click",()=>{
-                delete cart.items[index];
-                cart._checkTotal ();
-                cart.calculateSum ();
-                catalog.render()
-            });
-        });
+        
     }
     
 }
 document.querySelector(".backet").addEventListener("click", () => {
             
-    if ( document.querySelector(".div_cart").style.display == "none"){
-        document.querySelector(".div_cart").style.display = "block";
+    if ( document.querySelector(".cart-block").style.display == "none"){
+        document.querySelector(".cart-block").style.display = "block";
     }
     else {
-        document.querySelector(".div_cart").style.display = "none";
+        document.querySelector(".cart-block").style.display = "none";
     }
 })
 
@@ -111,76 +88,87 @@ let cart = {
     items: [],
     total: 0,
     sum: 0,
-    addProduct (evt) {
-        let id = +evt.target.name;
-        //нарушение инкапсуляции (Вообще так не делаем, но пока делаем)
-        let prod = catalog._createNewProduct (id);
-        if (cart.items.length==0){
-            prod.quantity=1
-            cart.items[id]=prod
-            cart._checkTotal ();
-            cart.calculateSum ();
-            catalog.render();
-            return
-        }
-        for (let i=0;i<cart.items.length;i++) {  
-            if (i==id && cart.items[i] != undefined){       
-                cart.items[i].quantity++ ;
-                break              
-            }
-            else if (cart.items.length-1<id){
-                prod.quantity = 1;
-                cart.items[id] = prod;
-                break            
-            }
-            else if (i==id && cart.items[i]==undefined){
-                prod.quantity = 1;
-                cart.items[id] = prod;
-                break
-                
-            }
-        }
-        cart._checkTotal ();
-        cart.calculateSum ();
-        catalog.render();
-    
-     },
-    deleteProduct (evt) {
-        let id = +/\d/.exec(evt.target.name)[0]
-        cart.items.forEach((el,index)=>{
-                if (el.product_id===id){
-                    if (el.quantity>1) {
-                        el.quantity--;
-                        cart._checkTotal();
-                        cart.calculateSum ();
-                        catalog.render();
-                    } else {
-                        delete cart.items[index]
-                        cart._checkTotal();
-                        cart.calculateSum ();
-                        catalog.render();
-                    }
-                }
-        })               
-        
+    container: '.cart-block',
+    quantityBlock: document.querySelector ('#quantity'),
+    priceBlock: document.querySelector ('#price'),
+    construct () {
+        this._init ()
     },
-    calculateSum () {
-        cart.sum=0;
-        cart.items.forEach(el => {
-            if (el!=undefined){
-                this.sum+=el.price*el.quantity;
-            }
-        }) 
+    _init () {
+        this._handleEvents ()
     },
-    _checkTotal () {
-        cart.total=0;
-        cart.items.forEach(el => {
-            if (el!=undefined){
-                cart.total+=el.quantity;
+    _handleEvents () {
+        document.querySelector (this.container).addEventListener ('click', (evt) => {
+            if (evt.target.name === 'del-btn') {
+                this.deleteProduct (evt.target)
             }
-        })        
+        })
+    },
+    addProduct (product) {
+        let id = product.dataset['id']
+        let find = this.items.find (product => product.id_product === id)
+        if (find) {
+            find.quantity++
+        } else {
+            let prod = this._createNewProduct (product)
+            this.items.push (prod)
+        }
+         
+        this._checkTotalAndSum ()
+        this.render ()
+    },
+    _createNewProduct (prod) {
+        return {
+            img:prod.dataset['src'],
+            product_name: prod.dataset['name'],
+            price: prod.dataset['price'],
+            id_product: prod.dataset['id'],
+            quantity: 1
+        }
+    },
 
+    deleteProduct (product) {
+        let id = product.dataset['id']
+        let find = this.items.find (product => product.id_product === id)
+        if (find.quantity > 1) {
+            find.quantity--
+        } else {
+            this.items.splice (this.items.indexOf(find), 1)
+        }
+         
+        this._checkTotalAndSum ()
+        this.render ()
+    }, 
+    _checkTotalAndSum () {
+        let qua = 0
+        let pr = 0
+        this.items.forEach (item => {
+            qua += item.quantity
+            pr += item.price * item.quantity
+        })
+        this.total = qua
+        this.sum = pr
     },
+    render () {
+        let itemsBlock = document.querySelector (this.container).querySelector ('.cart-items')
+        let str = ''
+        this.items.forEach (item => {
+            str += `<div class="cart-item" data-id="${item.id_product}">
+                    <img src="${item.img}"  class="img_cart" width="100" height="80" alt="">
+                    <div class="product-desc">
+                        <p class="product-title">${item.product_name}</p>
+                        <p class="product-quantity">${item.quantity}</p>
+                        <p class="product-single-price">${item.price}</p>
+                    </div>
+                    <button name="del-btn" class="del-btn" data-id="${item.id_product}">&times;</button>
+                </div>`
+        })
+        itemsBlock.innerHTML = str
+        this.quantityBlock.innerText = this.total
+        this.priceBlock.innerText = this.sum
+        document.querySelector(".cart_total").innerHTML = `${this.total}`
+    }
 }
-catalog.construct () ;
+catalog.construct (cart) //тут происходит создание объекта и вся прочая магия
+ cart.construct ()
 

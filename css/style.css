@@ -167,9 +167,6 @@ main{
     display: block;
     padding: 0 0 20px 0;
 }
-.title_backet{
-    text-align: center;
-}
 .product_cart{
     display: flex;
     flex-wrap: wrap;
@@ -179,57 +176,77 @@ main{
    border-radius: 5px;
    background-color: white;
 }
+.cart-items{
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+}
+.cart-item{
+    position: relative;
+}
+.product-desc{
+    width: 100px;
+    display: flex;
+    flex-direction: column;
 
-.text_cart{
+}
+.product-title, .product-quantity, .product-single-price{
     width: 120px;
     color: #30364a;
     font-family: 'Solway', serif;
     font-size:20px;
-    margin: 0 0 5px 0;
+    margin: 0;
+    padding: 5px;
+    
+}
+.product-quantity{
+    float: left;
+    width: 50px;
 }
 .img_cart{
     display: block;
     padding: 10px;
     float: left;
 }
-
-.btn_minus, .btn_add{
-    width: 20px;
+#price,#quantity, .cart_total{
+    color: #30364a;
+    font-family: 'Solway', serif;
+    font-size:20px;
+    margin: 0; 
+}
+.d-block {
+    color: #30364a;
+    font-family: 'Solway', serif;
+    font-size:20px;
+    margin: 0;
+    padding: 10px;
+    width: 200px;
+    
+}
+.del-btn{
+    width: 30px;
     height: 20px;
     padding: 0 0 5px 0;
     color: white;
     font-family: 'Roboto', sans-serif;
     background-color:#757b92;
-    border-radius: 50%;
     outline: none;
+    border-radius: 5px;
     border: none;
     font-size: 17px;
     text-align: center;
     line-height: 20px;
-}
-.text_block{
-    position: relative;
-}
-.btn_delete{
-    width: 20px;
-    height: 20px;
-    padding: 0 0 5px 0;
-    color: white;
-    font-family: 'Roboto', sans-serif;
-    background-color:#757b92;
-    border-radius: 3px;
-    outline: none;
-    border: none;
-    font-size: 17px;
-    text-align: center;
-    line-height: 20px;
+    cursor: pointer;
     position: absolute;
-    top:-7px;
-    left:108px;
-
+    top:40px;
+    left:210px;
+    
 }
-.btn_minus:hover, .btn_add:hover, .button_product:hover,.btn_minus:active, .btn_add:active, .button_product:active, .btn_delete:hover,.btn_delete:active{
+
+.del-btn:hover, .button_product:hover,.del-btn:active, .button_product:active{
     background-color: #d2a283;
+}
+.del-btn:hover{
+    border:1px solid white;
 }
 .cart_total{
     position: absolute;
@@ -245,7 +262,7 @@ main{
     text-align: center;
 
 }
-.div_cart{
+.cart-block{
     width: 250px;
     position: absolute;
     background-color: #d2a283;
@@ -258,7 +275,7 @@ main{
     border:1px solid white;
   
 }
-.div_cart:before{
+.cart-block:before{
     content: "";
     display: block;
     position: absolute;
